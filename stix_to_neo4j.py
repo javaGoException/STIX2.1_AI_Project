@@ -14,7 +14,7 @@ auth = (db_username, db_password)
 driver = GraphDatabase.driver(uri=db_uri, auth=auth)
 
 
-#Main function to load SDOs
+#main function to load SDOs
 def load_sdos_to_neo4j(path):
     with open(path) as f:
         stix_json_data = json.load(f)
@@ -22,8 +22,8 @@ def load_sdos_to_neo4j(path):
     for stix_object in stix_json_data["objects"]:
 
         if stix_object["type"] == "attack-pattern":
-            load_common_properties("AttackPattern", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("AttackPattern", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (a:AttackPattern {id: $id})
@@ -36,8 +36,8 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "campaign":
-            load_common_properties("Campaign", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("Campaign", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (c:Campaign {id: $id})
@@ -50,8 +50,8 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "course-of-action":
-            load_common_properties("CourseOfAction", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("CourseOfAction", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (c:CourseOfAction {id: $id})
@@ -64,8 +64,8 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "identity":
-            load_common_properties("Identity", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("Identity", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (i:Identity {id: $id})
@@ -78,8 +78,8 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "infrastructure":
-            load_common_properties("Infrastructure", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("Infrastructure", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (i:Infrastructure {id: $id})
@@ -92,8 +92,8 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "intrusion-set":
-            load_common_properties("IntrusionSet", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("IntrusionSet", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (i:IntrusionSet {id: $id})
@@ -106,20 +106,20 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "location":
-            load_common_properties("Location", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("Location", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
         if stix_object["type"] == "malware":
-            load_common_properties("Malware", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("Malware", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
         if stix_object["type"] == "malware-analysis":
-            load_common_properties("MalwareAnalysis", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("MalwareAnalysis", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
         if stix_object["type"] == "note":
-            load_common_properties("Note", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("Note", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
             query = """
                 MERGE (n:Note {id: $id})
                 SET n.content = $content
@@ -131,8 +131,8 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "observed-data":
-            load_common_properties("ObservedData", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("ObservedData", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (o:ObservedData {id: $id})
@@ -149,8 +149,8 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "report":
-            load_common_properties("Report", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("Report", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (r:Report {id: $id})
@@ -165,8 +165,8 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "threat-actor":
-            load_common_properties("ThreatActor", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("ThreatActor", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (t:ThreatActor {id: $id})
@@ -179,8 +179,8 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "tool":
-            load_common_properties("Tool", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("Tool", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (t:Tool {id: $id})
@@ -193,8 +193,8 @@ def load_sdos_to_neo4j(path):
             )
 
         if stix_object["type"] == "vulnerability":
-            load_common_properties("Vulnerability", stix_object["id"], stix_object["type"], stix_object["spec_version"],
-                                   stix_object["created"], stix_object["modified"])
+            load_sdo_common_properties("Vulnerability", stix_object["id"], stix_object["type"], stix_object["spec_version"],
+                                       stix_object["created"], stix_object["modified"])
 
             query = """
                 MERGE (v:Vulnerability {id: $id})
@@ -206,8 +206,40 @@ def load_sdos_to_neo4j(path):
                 name=stix_object["name"],
             )
 
+
+#main function to load SROs
+def load_sros_to_neo4j(path):
+    with open(path) as f:
+        stix_json_data = json.load(f)
+
+    for stix_object in stix_json_data["objects"]:
+
+        if stix_object["type"] == "relationship":
+            relationship_name = to_pascal_case(stix_object["relationship_type"])
+
+            query = f"""
+                MATCH (sourceObject {{id: $id_source}}), (targetObject {{id: $id_target}})
+                MERGE (sourceObject)-[r:{relationship_name}]->(targetObject)
+                SET r.id = $id_relationship,
+                    r.type = $type,
+                    r.spec_version = $spec_version,
+                    r.created = datetime($created),
+                    r.modified = datetime($modified)
+                """
+            session.run(
+                query,
+                id_source=stix_object["source_ref"],
+                id_target=stix_object["target_ref"],
+                id_relationship=stix_object["id"],
+                type=stix_object["type"],
+                spec_version=stix_object["spec_version"],
+                created=stix_object["created"],
+                modified=stix_object["modified"]
+            )
+
+
 #used by the load_sdos_to_neo4j()
-def load_common_properties(label, stix_id, stix_type, stix_spec_version, stix_created, stix_modified):
+def load_sdo_common_properties(label, stix_id, stix_type, stix_spec_version, stix_created, stix_modified):
     query = f"""
         MERGE (x:{label} {{id: $id}})
         SET x.type = $type,
@@ -225,22 +257,32 @@ def load_common_properties(label, stix_id, stix_type, stix_spec_version, stix_cr
     )
 
 
+def to_pascal_case(input_string):
+  words = input_string.split('-')
+  pascal_case_string = "".join(word.capitalize() for word in words)
+
+  return pascal_case_string
+
+
 with (driver.session(database=db_name) as session):
 
     def load_ics(path: str):
         # results = validate_file(path)
         # print_results(results)
         load_sdos_to_neo4j(path)
+        load_sros_to_neo4j(path)
 
     def load_mobile(path: str):
         # results = validate_file(path)
         # print_results(results)
         load_sdos_to_neo4j(path)
+        load_sros_to_neo4j(path)
 
     def load_enterprise(path: str):
         # results = validate_file(path)
         # print_results(results)
         load_sdos_to_neo4j(path)
+        load_sros_to_neo4j(path)
 
     load_ics("attack-stix-data/ics-attack-17.0.json")
     load_mobile("attack-stix-data/mobile-attack-17.0.json")
