@@ -19,15 +19,6 @@ driver = GraphDatabase.driver(uri=db_uri, auth=auth)
 
 #main function to load SDOs
 def load_sdos(path):
-    # memory_store = MemoryStore()
-    # memory_store.load_from_file(path)
-
-    # stix_objects_filter = [
-    #     Filter('type', '!=', 'relationship'),
-    #     Filter('type', '!=', 'x-mitre-collection')
-    # ]
-    # stix_objects = memory_store.query(stix_objects_filter)
-
     with open(path) as f:
         stix_json_data = json.load(f)
 
@@ -55,8 +46,37 @@ def load_sdos(path):
             session.run(match_query)
 
 
+#TODO: Make attributes load automatically just like in load_sdos
+#TODO: Create a function for loading embedded relationships: Matrix, Tactics, Techniques
+#main function to load SROs
 def load_sros(path):
-    pass
+    with open(path) as f:
+        stix_json_data = json.load(f)
+
+    for stix_object in stix_json_data["objects"]:
+
+        if stix_object["type"] == "relationship":
+            relationship_name = to_pascal_case(stix_object["relationship_type"])
+
+            query = f"""
+                MATCH (sourceObject {{id: $id_source}}), (targetObject {{id: $id_target}})
+                MERGE (sourceObject)-[r:{relationship_name}]->(targetObject)
+                SET r.id = $id_relationship,
+                    r.type = $type,
+                    r.spec_version = $spec_version,
+                    r.created = datetime($created),
+                    r.modified = datetime($modified)
+                """
+            session.run(
+                query,
+                id_source=stix_object["source_ref"],
+                id_target=stix_object["target_ref"],
+                id_relationship=stix_object["id"],
+                type=stix_object["type"],
+                spec_version=stix_object["spec_version"],
+                created=stix_object["created"],
+                modified=stix_object["modified"]
+            )
 
 
 def to_pascal_case(input_string):
