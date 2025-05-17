@@ -289,3 +289,26 @@ with (driver.session(database=db_name) as session):
     load_enterprise("attack-stix-data/enterprise-attack-17.0.json")
 
 driver.close()
+
+
+# def print_nested(data, indent=0):
+#     spacing = '  ' * indent
+#     if isinstance(data, dict):
+#         for key, value in data.items():
+#             if isinstance(value, (dict, list)):
+#                 print(f"{spacing}{key}:")
+#                 print_nested(value, indent + 1)
+#             else:
+#                 print(f"{spacing}{key}: {value}")
+#     elif isinstance(data, list):
+#         for index, item in enumerate(data):
+#             print(f"{spacing}[{index}]:")
+#             print_nested(item, indent + 1)
+#     else:
+#         print(f"{spacing}{data}")
+#
+#
+# with open("attack-stix-data/ics-attack-17.1.json") as f:
+#     stix_data = json.load(f)
+#
+# print_nested(stix_data)
