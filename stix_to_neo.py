@@ -1,9 +1,7 @@
 import json
 from os import getenv
 
-from stix2.workbench import query
 from stix2validator import validate_file, print_results
-from stix2 import MemoryStore, Filter
 from dotenv import load_dotenv
 from neo4j import GraphDatabase
 
@@ -28,25 +26,21 @@ def load_sdos(path):
 
         label = to_pascal_case(stix_object["type"])
         merge_query = f"""
-            MERGE (x:{label} {{id: "{stix_object["id"]}", type: "{stix_object["type"]}"}})
+            MERGE (x:{label} {{id: "{stix_object["id"]}"}})
         """
         session.run(merge_query)
 
         for attr, value in stix_object.items():
-            if isinstance(value, str):
-                value = double_to_single_quotes(value)
-
-            elif isinstance(value, (dict,list)):
-                value = double_to_single_quotes(json.dumps(value))
+            if isinstance(value, (dict,list)):
+                value = json.dumps(value)
 
             match_query = f"""
                 MATCH (x:{label} {{id: "{stix_object["id"]}"}})
-                SET x.{attr} = "{value}"
+                SET x.{attr} = $value
             """
-            session.run(match_query)
+            session.run(match_query, value=value)
 
 
-#TODO: Make attributes load automatically just like in load_sdos
 #TODO: Create a function for loading embedded relationships: Matrix, Tactics, Techniques
 #main function to load SROs
 def load_sros(path):
@@ -58,25 +52,25 @@ def load_sros(path):
         if stix_object["type"] == "relationship":
             relationship_name = to_pascal_case(stix_object["relationship_type"])
 
-            query = f"""
-                MATCH (sourceObject {{id: $id_source}}), (targetObject {{id: $id_target}})
+            merge_query = f"""
+                MATCH (sourceObject {{id: "{stix_object["source_ref"]}"}}), (targetObject {{id: "{stix_object["target_ref"]}"}})
                 MERGE (sourceObject)-[r:{relationship_name}]->(targetObject)
-                SET r.id = $id_relationship,
-                    r.type = $type,
-                    r.spec_version = $spec_version,
-                    r.created = datetime($created),
-                    r.modified = datetime($modified)
+            """
+            session.run(merge_query)
+
+
+            for attr, value in stix_object.items():
+                if isinstance(value, (dict, list)):
+                    value = json.dumps(value)
+
+                match_query = f"""
+                    MATCH (sourceObject {{id: "{stix_object["source_ref"]}"}})-[r:{relationship_name}]->(targetObject {{id: "{stix_object["target_ref"]}"}})
+                    SET r.{attr} = $value
                 """
-            session.run(
-                query,
-                id_source=stix_object["source_ref"],
-                id_target=stix_object["target_ref"],
-                id_relationship=stix_object["id"],
-                type=stix_object["type"],
-                spec_version=stix_object["spec_version"],
-                created=stix_object["created"],
-                modified=stix_object["modified"]
-            )
+                session.run(
+                    match_query,
+                    value=value
+                )
 
 
 def to_pascal_case(input_string):
@@ -84,11 +78,6 @@ def to_pascal_case(input_string):
   pascal_case_string = "".join(word.capitalize() for word in words)
 
   return pascal_case_string
-
-def double_to_single_quotes(s):
-    s = s.replace('\\"', "'")
-    s = s.replace('"', "'")
-    return s
 
 
 with (driver.session(database=db_name) as session):
@@ -112,7 +101,7 @@ with (driver.session(database=db_name) as session):
         load_sros(path)
 
     load_ics("attack-stix-data/ics-attack-17.1.json")
-    #load_mobile("attack-stix-data/mobile-attack-17.1.json")
-    #load_enterprise("attack-stix-data/enterprise-attack-17.1.json")
+    load_mobile("attack-stix-data/mobile-attack-17.1.json")
+    load_enterprise("attack-stix-data/enterprise-attack-17.1.json")
 
 driver.close()
