@@ -25,20 +25,20 @@ def load_sdos(path):
     for stix_object in stix_objects:
 
         label = to_pascal_case(stix_object["type"])
-        merge_query = f"""
-            MERGE (x:{label} {{id: "{stix_object["id"]}"}})
-        """
-        session.run(merge_query)
 
+        object_properties = {}
         for attr, value in stix_object.items():
             if isinstance(value, (dict,list)):
-                value = json.dumps(value)
+                object_properties[attr] = json.dumps(value)
+            else:
+                object_properties[attr] = value
 
-            match_query = f"""
-                MATCH (x:{label} {{id: "{stix_object["id"]}"}})
-                SET x.{attr} = $value
-            """
-            session.run(match_query, value=value)
+        query = f"""
+            MERGE (x:{label} {{id: "{stix_object["id"]}"}})
+            SET x = $properties
+        """
+
+        session.run(query, properties=object_properties)
 
 
 #TODO: Create a function for loading embedded relationships: Matrix, Tactics, Techniques
@@ -47,30 +47,25 @@ def load_sros(path):
     with open(path) as f:
         stix_json_data = json.load(f)
 
-    for stix_object in stix_json_data["objects"]:
+    stix_relationships = [rel for rel in stix_json_data["objects"] if rel["type"] in "relationship"]
 
-        if stix_object["type"] == "relationship":
-            relationship_name = to_pascal_case(stix_object["relationship_type"])
+    for stix_relationship in stix_relationships:
 
-            merge_query = f"""
-                MATCH (sourceObject {{id: "{stix_object["source_ref"]}"}}), (targetObject {{id: "{stix_object["target_ref"]}"}})
-                MERGE (sourceObject)-[r:{relationship_name}]->(targetObject)
-            """
-            session.run(merge_query)
+        relationship_name = to_pascal_case(stix_relationship["relationship_type"])
 
+        relationship_properties = {}
+        for attr, value in stix_relationship.items():
+            if isinstance(value, (dict, list)):
+                relationship_properties[attr] = json.dumps(value)
+            else:
+                relationship_properties[attr] = value
 
-            for attr, value in stix_object.items():
-                if isinstance(value, (dict, list)):
-                    value = json.dumps(value)
-
-                match_query = f"""
-                    MATCH (sourceObject {{id: "{stix_object["source_ref"]}"}})-[r:{relationship_name}]->(targetObject {{id: "{stix_object["target_ref"]}"}})
-                    SET r.{attr} = $value
-                """
-                session.run(
-                    match_query,
-                    value=value
-                )
+        query = f"""
+            MATCH (sourceObject {{id: "{stix_relationship["source_ref"]}"}}), (targetObject {{id: "{stix_relationship["target_ref"]}"}})
+            MERGE (sourceObject)-[r:{relationship_name}]->(targetObject)
+            SET r = $properties
+        """
+        session.run(query, properties=relationship_properties)
 
 
 def to_pascal_case(input_string):
