@@ -114,7 +114,7 @@ def load_embedded_relationships(path):
                 if phase_name in tactic_shortname_to_id:
                     tactic_id = tactic_shortname_to_id[phase_name]
 
-                    relationship_type = "IsTacticOf"
+                    relationship_type = "ContainsTechnique"
 
                     relationship_properties = {
                         "relationship_type": relationship_type,
