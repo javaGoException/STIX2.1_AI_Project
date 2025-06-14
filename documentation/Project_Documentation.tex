@@ -1,0 +1,144 @@
+\documentclass[12pt]{article}
+\usepackage{wrapfig}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{listings}
+\usepackage{caption}
+\captionsetup{skip=5pt}
+\usepackage[british]{babel}
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm, paper=a4paper]{geometry}
+\usepackage[hyphens]{url}
+\usepackage[hyperfootnotes=false]{hyperref}
+\usepackage{float}
+\graphicspath{ {./images/} }
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{newfloat}
+
+\hyphenpenalty=1500
+\pretolerance=5000
+\tolerance=9000
+\emergencystretch=0pt
+\righthyphenmin=4
+\lefthyphenmin=4
+\hyphenation{
+	Voice
+}
+
+\definecolor{code_string}{rgb}{0.133, 0.545, 0.133}
+\definecolor{code_number}{rgb}{0.0, 0.0, 1.0}
+\definecolor{code_keyword}{HTML}{ff9400}
+\definecolor{code_background}{rgb}{0.95, 0.95, 0.95}
+\definecolor{line_numbering}{rgb}{0.3,0.3,0.3}
+
+\renewcommand{\lstlistingname}{Code snippet}
+\lstdefinestyle{code_style}{
+	backgroundcolor=\color{code_background},
+	numberstyle=\color{code_number},
+	keywordstyle=\color{code_keyword},
+	stringstyle=\color{code_string},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,
+	breaklines=true,
+	captionpos=b,
+	keepspaces=true,
+	showstringspaces=false,
+	numbers=left,
+	numbersep=7pt,
+	xleftmargin=15pt,
+	frame=single,
+	numberstyle=\ttfamily\footnotesize\color{line_numbering},
+	morekeywords={header, main, footer},
+	alsoletter={<>,},
+}
+\lstset{style=code_style}
+
+\DeclareFloatingEnvironment{figureEnv}
+\captionsetup[figureEnv]{name=Figure}
+\newcommand{\insertImage}[3]{
+	\begin{figureEnv}[H]
+		\centering
+		\makebox[\textwidth]{\frame{\includegraphics[scale=#1]{#2}}}
+		\caption{#3}
+		\label{fig:#2}
+	\end{figureEnv}
+}
+
+
+\newcommand\mysectionref[1]{Section\,\ref{#1}: \textit{\nameref{#1}}}
+
+\newcommand{\insertCode}[3]{
+	\vspace{12pt}
+	\lstinputlisting[language=#1, caption={#3}, label={code:#2}]{code_snippets/#2}
+}
+
+\title {
+	\begin{flushleft}
+		\includegraphics[scale=0.5]{THB_Logo.png} \\[1.5cm]
+	\end{flushleft}
+	
+	{KI Projekt LLMs on Steroids}
+	
+	\begin{center}
+		
+		\author{\textbf{Master-Projekt Künstliche Intelligenz} \\ Fachbereich Informatik und Medien der \\ Technischen Hochschule Brandenburg \\[1.8cm] Robin Wagner \\ Artem Paliesika \\ Martin Krüger \\ [1.8cm] Fachbereich: Informatik und Medien \\ Studiengang: Informatik \\[0.8cm] {Erstbetreuer: Prof. Dr. Emanuel Kitzelmann} \\ {Zweitbetreuer: Dipl.-Inform. Ingo Boersch} \\ [1.2cm]}
+		
+	\end{center}
+}
+
+\date{\today}
+
+\onehalfspacing
+
+
+\begin{document}
+	\pagenumbering{gobble}
+	\maketitle
+	\titlepage
+	
+	\begin{spacing}{1.225}
+		\tableofcontents
+	\end{spacing}
+	\newpage
+	
+	\pagenumbering{arabic}
+	\newpage
+	
+	\section{This is a section}
+	
+	\par Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\cite{loremIpsumRef}
+	
+	\subsection{This is a subsection}
+	
+	\par It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\cite{loremIpsumRef}
+
+	
+	\subsubsection{And this is a subsubsection}
+	
+	\par Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. \cite{loremIpsumRef}
+	
+	\section{Useful features}
+	
+	\par You can insert images like that:	
+	
+	\insertImage{0.45}{THB_Logo.png}{first parameter is size of the image, second is it's path. This third one is description.}
+	
+	\par You can also use footnotes.\footnote{Footnotes are created like that. You can put a ref here as well. \cite{loremIpsumRef}}. The code is inserted as follows:
+	
+	\insertCode{python}{api_get_image.txt}{First parameter is where you can specify the language, second is path, this(\textit{third}) is the description.}
+	
+	\newpage
+	
+	\subsection{Some section that must be referred to}
+	\label{section:unique_label}
+	
+	\par You can reference the section of the latex document using and \textbf{label} and \textbf{ref}. Just create a label as shown above and then reference that section \ref{section:unique_label}. I've also created a custom command for referencing section with their names: \mysectionref{section:unique_label}.
+	
+	\par The same goes for code snippets. Just put ``\textbf{code:}'' before typing the code file name. This is the ref to code snippet \ref{code:api_get_image.txt}.
+	
+	\newpage
+	\addcontentsline{toc}{section}{References}
+	\bibliography{references.bib}
+	\bibliographystyle{unsrt}
+	
+\end{document}
+
