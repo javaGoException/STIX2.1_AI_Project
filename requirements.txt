@@ -61,6 +61,7 @@ neo4j-graphrag==1.7.0
 nest-asyncio==1.6.0
 notebook==7.4.3
 notebook_shim==0.2.4
+ollama==0.4.9
 openai==1.84.0
 overrides==7.7.0
 packaging==25.0

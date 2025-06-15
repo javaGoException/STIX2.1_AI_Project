@@ -1,0 +1,4 @@
+@app.route("/api/vehicles/<vehicle_id>/<image>", methods=["GET"])
+def get_vehicle_image(vehicle_id, image):
+    directory = f"data/api/{vehicle_id}"
+    return send_from_directory(directory, f"{image}")

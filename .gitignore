@@ -1,6 +1,14 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,flask,vuejs,pycharm+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,flask,vuejs,pycharm+all
 
+#LaTeX
+*.aux
+*.bbl
+*.blg
+*.out
+*.synctex.gz
+*.toc
+
 *.cfg
 ### Flask ###
 instance/*
