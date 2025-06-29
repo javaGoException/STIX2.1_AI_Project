@@ -2,13 +2,7 @@ import pandas as pd
 import re
 
 def calculate_metrics(df_path):
-    """
-    Berechnet verschiedene Metriken für verschiedene LLM-Ansätze aus einer CSV-Datei.
 
-    Args:
-        df_path (str): Der Pfad zur CSV-Datei.
-                       Die CSV-Datei sollte durch Kommas (,) getrennt sein.
-    """
     try:
         # Read the CSV file, specifying comma as the delimiter
         df = pd.read_csv(df_path, sep=',')
@@ -19,16 +13,14 @@ def calculate_metrics(df_path):
         print(f"Fehler beim Lesen der CSV-Datei: {e}")
         return None
 
-    # Convert 'Correctness' columns from 'Incorrect'/'Correct' to 0/1
+    # Convert 'Incorrect'/'Correct' to 0/1
     for col in df.columns:
         if 'Correctness' in col:
             # Handle potential non-string values gracefully before applying lower()
             df[col] = df[col].apply(lambda x: 1 if str(x).strip().lower() == 'correct' else 0)
 
-    # Dictionary to store results for each approach
     results = {}
 
-    # Define approaches and their corresponding columns
     approaches = {
         "QO": {
             "answer_col": "Answer LLM (QO)",
@@ -70,7 +62,6 @@ def calculate_metrics(df_path):
         }
     }
 
-    # Function to calculate F1 for a single pair of texts
     def calculate_f1_for_texts(ground_truth, answer):
         # Ensure inputs are strings and handle NaN
         ground_truth = str(ground_truth) if pd.notna(ground_truth) else ""
@@ -96,8 +87,6 @@ def calculate_metrics(df_path):
         print(f"\n--- Metriken für {approach_name} ---")
         current_results = {}
 
-        # Filter out rows where the core answer/correctness columns might be entirely missing for this approach
-        # Check if the columns exist before filtering to avoid KeyError
         if cols["correctness_col"] not in df.columns or cols["answer_col"] not in df.columns:
             print(f"Warnung: Spalten '{cols['correctness_col']}' oder '{cols['answer_col']}' nicht für '{approach_name}' gefunden. Überspringe Metrikberechnung.")
             results[approach_name] = current_results
@@ -124,7 +113,6 @@ def calculate_metrics(df_path):
         print(f"Exakter Treffer (EM) Score: {em_score:.4f}")
 
         f1_scores_list = []
-        # Ensure 'Ground Truth' column exists and is treated as string
         if 'Ground Truth' in df_filtered.columns:
             for index, row in df_filtered.iterrows():
                 f1_scores_list.append(calculate_f1_for_texts(row['Ground Truth'], row[cols["answer_col"]]))
@@ -135,7 +123,6 @@ def calculate_metrics(df_path):
         avg_f1_score = sum(f1_scores_list) / len(f1_scores_list) if len(f1_scores_list) > 0 else 0
         current_results["Durchschnittlicher F1 Score"] = avg_f1_score
         print(f"Durchschnittlicher F1 Score (Textvergleich): {avg_f1_score:.4f}")
-
 
         # 3. Antwortlänge im Vergleich zur Korrektheit
         df_filtered.loc[:, 'Length Answer Temp'] = df_filtered[cols["answer_col"]].astype(str).apply(len)
@@ -148,8 +135,7 @@ def calculate_metrics(df_path):
         current_results["Durchschnittliche Antwortlänge (Inkorrekt)"] = avg_len_incorrect
         print(f"Durchschnittliche Antwortlänge (Korrekt): {avg_len_correct:.2f}")
         print(f"Durchschnittliche Antwortlänge (Inkorrekt): {avg_len_incorrect:.2f}")
-        df_filtered = df_filtered.drop(columns=['Length Answer Temp']) # Clean up temp column
-
+        df_filtered = df_filtered.drop(columns=['Length Answer Temp'])
 
         # 4. Num Retrieved Neighbors im Vergleich zur Korrektheit (nur für RAG und Choices)
         if "num_retrieved_neighbors_col" in cols and cols["num_retrieved_neighbors_col"] in df_filtered.columns:
@@ -163,7 +149,6 @@ def calculate_metrics(df_path):
         else:
             print("Spalte 'Num Retrieved Neighbors' nicht anwendbar oder für diesen Ansatz nicht gefunden.")
 
-
         # 5. Zeit im Vergleich zur Korrektheit
         if cols["duration_col"] in df_filtered.columns:
             df_filtered.loc[:, cols["duration_col"]] = pd.to_numeric(df_filtered[cols["duration_col"]], errors='coerce')
@@ -176,22 +161,13 @@ def calculate_metrics(df_path):
         else:
             print("Spalte 'Duration' für diesen Ansatz nicht gefunden.")
 
-
         results[approach_name] = current_results
 
     return results
 
-# --- So verwendest du das Skript ---
-# 1. Speichere den obigen Code als Python-Datei (z.B. 'analyse_llm_data.py').
-# 2. Ersetze 'your_data.csv' durch den tatsächlichen Pfad zu deiner CSV-Datei.
-#    Beispiel: metrics_results = calculate_metrics('pfad/zu/deiner/datei.csv')
-# 3. Führe das Skript im Terminal aus: python analyse_llm_data.py
-
-# Beispielaufruf (ersetze 'your_data.csv' durch den echten Pfad zu deiner Datei):
 metrics_results = calculate_metrics('evaluation_results.csv')
 
 if metrics_results:
-    # Optional: Display all results in a structured way (e.g., as a DataFrame)
     results_df = pd.DataFrame.from_dict(metrics_results, orient='index')
     print("\n--- Zusammenfassung aller Metriken ---")
     print(results_df)
