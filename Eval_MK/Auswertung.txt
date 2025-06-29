@@ -1,0 +1,55 @@
+deepseek-r1:1.5b --> + Testdatei mit 40 Datensätzen
+
+--- Metriken für QO ---
+Genauigkeit (Accuracy): 0.0000
+Exakter Treffer (EM) Score: 0.0000
+Durchschnittlicher F1 Score (Textvergleich): 0.0179
+Durchschnittliche Antwortlänge (Korrekt): nan
+Durchschnittliche Antwortlänge (Inkorrekt): 658.26
+Spalte 'Num Retrieved Neighbors' nicht anwendbar oder für diesen Ansatz nicht gefunden.
+Durchschnittliche Dauer (Korrekt): nan Sekunden
+Durchschnittliche Dauer (Inkorrekt): 18.69 Sekunden
+
+--- Metriken für RAG ---
+Genauigkeit (Accuracy): 0.0000
+Exakter Treffer (EM) Score: 0.0000
+Durchschnittlicher F1 Score (Textvergleich): 0.0141
+Durchschnittliche Antwortlänge (Korrekt): nan
+Durchschnittliche Antwortlänge (Inkorrekt): 589.17
+Durchschnittliche Anzahl abgerufener Nachbarn (Korrekt): nan
+Durchschnittliche Anzahl abgerufener Nachbarn (Inkorrekt): 26.14
+Durchschnittliche Dauer (Korrekt): nan Sekunden
+Durchschnittliche Dauer (Inkorrekt): 30.30 Sekunden
+
+--- Metriken für Choices ---
+Genauigkeit (Accuracy): 0.3571
+Exakter Treffer (EM) Score: 0.3571
+Durchschnittlicher F1 Score (Textvergleich): 0.0677
+Durchschnittliche Antwortlänge (Korrekt): 29105.20
+Durchschnittliche Antwortlänge (Inkorrekt): 573.48
+Durchschnittliche Anzahl abgerufener Nachbarn (Korrekt): 10.93
+Durchschnittliche Anzahl abgerufener Nachbarn (Inkorrekt): 34.59
+Durchschnittliche Dauer (Korrekt): 254.87 Sekunden
+Durchschnittliche Dauer (Inkorrekt): 32.79 Sekunden
+
+--- Metriken für Choices No RAG ---
+Genauigkeit (Accuracy): 0.2619
+Exakter Treffer (EM) Score: 0.2619
+Durchschnittlicher F1 Score (Textvergleich): 0.0775
+Durchschnittliche Antwortlänge (Korrekt): 473.09
+Durchschnittliche Antwortlänge (Inkorrekt): 437.29
+Spalte 'Num Retrieved Neighbors' nicht anwendbar oder für diesen Ansatz nicht gefunden.
+Durchschnittliche Dauer (Korrekt): 26.32 Sekunden
+Durchschnittliche Dauer (Inkorrekt): 98.25 Sekunden
+
+============================================================================================================================================================================================================================================================================================================================================================
+                                                                                                                                                         Zusammenfassende Metriken für LLM-Ansätze
+============================================================================================================================================================================================================================================================================================================================================================
+| Ansatz         | Accuracy | Durchschnittliche Antwortlänge (Inkorrekt) | Durchschnittliche Antwortlänge (Korrekt) | Durchschnittliche Anzahl abgerufener Nachbarn (Inkorrekt) | Durchschnittliche Anzahl abgerufener Nachbarn (Korrekt) | Durchschnittliche Dauer (Inkorrekt) | Durchschnittliche Dauer (Korrekt) | Durchschnittlicher F1 Score | EM Score |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| QO             | 0.0000   | 658.2619                                   |                                          |                                                           |                                                         | 18.6936                             |                                   | 0.0179                      | 0.0000   |
+| RAG            | 0.0000   | 589.1667                                   |                                          | 26.1429                                                   |                                                         | 30.2953                             |                                   | 0.0141                      | 0.0000   |
+| Choices        | 0.3571   | 573.4815                                   | 29105.2000                               | 34.5926                                                   | 10.9333                                                 | 32.7881                             | 254.8651                          | 0.0677                      | 0.3571   |
+| Choices No RAG | 0.2619   | 437.2903                                   | 473.0909                                 |                                                           |                                                         | 98.2530                             | 26.3192                           | 0.0775                      | 0.2619   |
+============================================================================================================================================================================================================================================================================================================================================================
+
