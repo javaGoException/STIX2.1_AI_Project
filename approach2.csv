@@ -1,18 +1,21 @@
 Question ID,Answer,Latency
 2,"
 
-The most likely ATT&CK technique that occurred during this scenario is **ATT&CK 2013**, which detects additions via methods like ""AddItem"" or ""AddPath"". The use of `UseRegisterItem` through `CreateProcess` adds files to the registry, triggering these detection methods. Additionally, manual deletion of traces could involve removing data that might be part of a cleanup process, though this isn't a specific technique. Therefore, ATT&CK 2013 is the likely method used.
+The malware executed run files or command-line tools using createprocess to copy data and delete initial traces like .word files via CreateProcess. Here's how:
 
-**Answer:** The most likely ATT&CK technique is **ATT&CK 2013**, which detects registry additions using ""AddItem"" or ""AddPath"".",69.3052
+1. **Run Files/Init Files**: The malware used createprocess to execute malicious code, potentially executing startup programs, cmd.exe, or other command-line tools.
+
+2. **Delete Initial Traces**: After copying data with createprocess, the malware deleted the resulting .word file, disrupting file ownership and preventing proper system initialization.
+
+3. **ATT&CK Technique**: This involved automated threat detection monitoring of createprocess commands to manipulate file ownership based on detected events, enhancing attack vulnerability.
+
+This strategy disrupted the system, making it easier for ATT&CK to detect new threats and exploit those createprocess triggers for further disruption.",33.5736
 5,"
 
-The ATT&CK technique most likely used before the files modified their timestamps to prevent detection by others who exploit Windows systems using Office's Equation Editor are **Timestomp** (WindowsIR Anti-Forensic Techniques) and **Masquerading**. Here's a breakdown of how this works:
+The attack described involved modifying the timestamps of files through techniques like forward and backward timestompping. Given that ATT&CK includes ""T4 (Time-based Compromise),"" which adjusts file times to keep them undetectable, it's plausible that T4 was used here.
 
-1. **Timestomp**:  
-   - Timestomp is a technique where the timestamp (modify, access, create, or change time) of a file is modified to avoid detection by forensic tools.
-   - It was used before adding timestomping because it allowed attackers to hide additional attacks that others might exploit.
+Additionally, the attack utilized ""T1036 File Name masquerading,"" where filenames were modified to hide malware and tools. This combination suggests that both timestampering and filename masking techniques contributed to the attack strategy.
 
-2. **Masquerading**:  
-   - Masquerading is another Timestamp technique where the timestamp information is hidden or obfuscated. This makes it harder for other systems (like Windows) to detect an attack before it can proceed.
+Thus, considering the use of timestampering methods and their relation to T4, it is likely that T4 (Time-based Compromise) was employed in this scenario.
 
-By using both Timestomp and Masquerading, attackers could hide their actual activity while still allowing others who use Windows systems to exploit them once they have modified the timestamps.",36.5505
+**Answer:** The most probable ATT&CK technique used in this attack is **T4 (Time-based Compromise)**.",30.9965
