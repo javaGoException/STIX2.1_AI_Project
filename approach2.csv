@@ -1,0 +1,21 @@
+Question ID,Answer,Latency
+2,"
+
+The malware executed run files or command-line tools using createprocess to copy data and delete initial traces like .word files via CreateProcess. Here's how:
+
+1. **Run Files/Init Files**: The malware used createprocess to execute malicious code, potentially executing startup programs, cmd.exe, or other command-line tools.
+
+2. **Delete Initial Traces**: After copying data with createprocess, the malware deleted the resulting .word file, disrupting file ownership and preventing proper system initialization.
+
+3. **ATT&CK Technique**: This involved automated threat detection monitoring of createprocess commands to manipulate file ownership based on detected events, enhancing attack vulnerability.
+
+This strategy disrupted the system, making it easier for ATT&CK to detect new threats and exploit those createprocess triggers for further disruption.",33.5736
+5,"
+
+The attack described involved modifying the timestamps of files through techniques like forward and backward timestompping. Given that ATT&CK includes ""T4 (Time-based Compromise),"" which adjusts file times to keep them undetectable, it's plausible that T4 was used here.
+
+Additionally, the attack utilized ""T1036 File Name masquerading,"" where filenames were modified to hide malware and tools. This combination suggests that both timestampering and filename masking techniques contributed to the attack strategy.
+
+Thus, considering the use of timestampering methods and their relation to T4, it is likely that T4 (Time-based Compromise) was employed in this scenario.
+
+**Answer:** The most probable ATT&CK technique used in this attack is **T4 (Time-based Compromise)**.",30.9965
